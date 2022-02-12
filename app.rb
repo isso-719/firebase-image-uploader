@@ -23,9 +23,6 @@ post '/create' do
 
         bucket = storage.bucket ENV['FIREBASE_STORAGE_BUCKET_ID']
 
-        # 画像の URL を保存する変数
-        img_url = ''
-
         # 一時ファイルを作成
         img = params[:file]
         tempfile = img[:tempfile]
@@ -36,8 +33,16 @@ post '/create' do
         # ランダムな名前をつける
         tempfile_name = SecureRandom.hex + tempfile_ext
 
+        # ファイル所得時のためにトークンを生成
+        token = SecureRandom.uuid
+
         # tempfile をストレージに保存
-        bucket.create_file tempfile, "img/#{tempfile_name}", metadata: { firebaseStorageDownloadTokens: SecureRandom.uuid }
+        file = bucket.create_file tempfile, "img/#{tempfile_name}", metadata: { firebaseStorageDownloadTokens: token }
+
+        # 画像の URL を保存する変数
+        img_url = "https://firebasestorage.googleapis.com/v0/b/#{ENV['FIREBASE_STORAGE_BUCKET_ID']}/o/img%2F#{tempfile_name}?alt=media&token=#{token}"
+
+        puts img_url
 
     end
 
