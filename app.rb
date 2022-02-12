@@ -25,8 +25,10 @@ post '/create' do
         # bucket を取得
         bucket = storage.bucket ENV['FIREBASE_STORAGE_BUCKET_ID']
 
-        # 一時ファイルを作成
+        # 一時ファイルの情報を img に格納
         img = params[:file]
+
+        # 一時ファイルの保存場所を取得
         tempfile = img[:tempfile]
 
         # 拡張子を取得
