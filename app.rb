@@ -5,6 +5,12 @@ require 'sinatra/reloader' if development?
 # FireBase 関連
 require 'google/cloud/storage'
 require 'google/cloud/firestore'
+require 'json'
+
+# .env ファイルを読み込む
+before do
+    Dotenv.load
+end
 
 get '/' do
     erb :index
@@ -14,7 +20,8 @@ post '/create' do
     if params[:file]
 
         storage = Google::Cloud::Storage.new(credentials: "./credentials.json")
-        bucket = storage.bucket ENV["FIREBASE_STORAGE_BUCKET_ID"]
+
+        bucket = storage.bucket ENV['FIREBASE_STORAGE_BUCKET_ID']
 
         # 画像の URL を保存する変数
         img_url = ''
